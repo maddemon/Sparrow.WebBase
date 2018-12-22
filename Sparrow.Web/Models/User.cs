@@ -36,4 +36,11 @@ namespace Sparrow.Web.Models
         [Description("超级管理员")]
         Administrator = 2
     }
+
+    public class UserParameter
+    {
+        public string SearchKey { get; set; }
+        public int OrganizationId { get; set; }
+        public PageParameter Page { get; set; }
+    }
 }

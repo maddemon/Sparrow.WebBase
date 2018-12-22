@@ -40,5 +40,10 @@ namespace Sparrow.Web.Models
                 return count < 1 ? 1 : count;
             }
         }
+
+        public static implicit operator int(PageParameter v)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

@@ -13,16 +13,21 @@ namespace Sparrow.Web.Managers
         {
         }
 
-        public override Task AddAsync(User model)
+        public override Task Add(User model)
         {
-            return base.AddAsync(model);
+            return base.Add(model);
         }
 
-        public override async Task DeleteAsync(params object[] keyValues)
+        public override async Task Delete(params object[] keyValues)
         {
-            var model = await GetAsync(keyValues);
+            var model = await Get(keyValues);
             model.Deleted = true;
             await Db.SaveChangesAsync();
+        }
+
+        public async Task<IEnumerable<User>> GetList(UserParameter parameter)
+        {
+            throw new NotImplementedException();
         }
     }
 }

@@ -24,27 +24,27 @@ namespace Sparrow.Web.Managers
         {
         }
 
-        public virtual async Task<T> GetAsync(params object[] keyValues)
+        public virtual async Task<T> Get(params object[] keyValues)
         {
             return await Db.Set<T>().FindAsync(keyValues);
         }
 
-        public virtual async Task AddAsync(T model)
+        public virtual async Task Add(T model)
         {
             await Db.Set<T>().AddAsync(model);
             await Db.SaveChangesAsync();
         }
 
-        public virtual async Task UpdateAsync(T model)
+        public virtual async Task Update(T model)
         {
             Db.Attach(model);
             Db.Entry(model).State = EntityState.Modified;
             await Db.SaveChangesAsync();
         }
 
-        public virtual async Task DeleteAsync(params object[] keyValues)
+        public virtual async Task Delete(params object[] keyValues)
         {
-            var entity = await GetAsync(keyValues);
+            var entity = await Get(keyValues);
             Db.Set<T>().Remove(entity);
             await Db.SaveChangesAsync();
         }

@@ -21,7 +21,14 @@ namespace Sparrow.Web.Models
 
         public DateTime CreatedTime { get; set; } = DateTime.Now;
 
+        public Gender Gender { get; set; }
+
+        public string Mobile { get; set; }
+
         public bool Deleted { get; internal set; }
+
+        [JsonIgnore]
+        public virtual ICollection<UserOrganization> Organizations { get; set; }
 
         [JsonIgnore]
         public virtual ICollection<Authentication> Authentications { get; set; }
@@ -35,6 +42,12 @@ namespace Sparrow.Web.Models
         Manager = 1,
         [Description("超级管理员")]
         Administrator = 2
+    }
+
+    public enum Gender
+    {
+        Female,
+        Male
     }
 
     public class UserParameter

@@ -32,7 +32,7 @@ namespace Sparrow.Web.Admin.Controllers
 
         [AllowAnonymous]
         [HttpPost]
-        public async Task Login(string username, string password)
+        public async void Login(string username, string password)
         {
             var authentication = await AuthenticationManager.Get(AuthenticationType.Password, username);
             if (authentication == null)
@@ -88,7 +88,7 @@ namespace Sparrow.Web.Admin.Controllers
         }
 
         [HttpPost]
-        public async Task Save(User data)
+        public async void Save(User data)
         {
             if (data.ID == 0)
             {

@@ -8,10 +8,15 @@ using System.Threading.Tasks;
 
 namespace Sparrow.Web.Managers
 {
-    public class AuthenticationManager : ManagerBase<Authentication>
+    public class AuthenticationManager : ManagerBase
     {
         public AuthenticationManager(DataContext db) : base(db)
         {
+        }
+
+        public async Task<Authentication> Get(int id)
+        {
+            return await Db.Authentications.FirstOrDefaultAsync(e => e.ID == id);
         }
 
         public async Task<Authentication> Get(AuthenticationType type, string nameIdentified)
@@ -28,16 +33,30 @@ namespace Sparrow.Web.Managers
             }
         }
 
-        public override async Task Add(Authentication model)
+        public async Task<int> Save(Authentication model)
         {
             await If_NameIdentified_Existed_ThrowException(model);
-            await base.Add(model);
+            Db.Authentications.Add(model);
+            return await Db.SaveChangesAsync();
         }
 
-        public override async Task Update(Authentication model)
+        public async Task<int> Update(Authentication model)
         {
             await If_NameIdentified_Existed_ThrowException(model);
-            await base.Update(model);
+
+            var entity = await Get(model.ID);
+            entity.NameIdentified = model.NameIdentified;
+            entity.AccessToken = model.AccessToken;
+            entity.UserID = model.UserID;
+
+            return await Db.SaveChangesAsync();
+        }
+
+        public async Task<int> Delete(int id)
+        {
+            var model = await Get(id);
+            Db.Authentications.Remove(model);
+            return await Db.SaveChangesAsync();
         }
     }
 }

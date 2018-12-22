@@ -7,27 +7,46 @@ using Sparrow.Web.Models;
 
 namespace Sparrow.Web.Managers
 {
-    public class UserManager : ManagerBase<User>
+    public class UserManager : ManagerBase
     {
         public UserManager(DataContext db) : base(db)
         {
         }
 
-        public override Task Add(User model)
+        public async Task<User> Get(int id)
         {
-            return base.Add(model);
+            return await Db.Users.FindAsync(id);
         }
 
-        public override async Task Delete(params object[] keyValues)
+        public async Task<int> Add(User model)
         {
-            var model = await Get(keyValues);
+            Db.Users.Add(model);
+            return await Db.SaveChangesAsync();
+        }
+
+        public async Task<int> Update(User model)
+        {
+            Db.Attach(model);
+            Db.Entry(model).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
+            return await Db.SaveChangesAsync();
+        }
+
+        public async Task<int> Delete(int id)
+        {
+            var model = await Get(id);
             model.Deleted = true;
-            await Db.SaveChangesAsync();
+            return await Db.SaveChangesAsync();
         }
 
         public async Task<IEnumerable<User>> GetList(UserParameter parameter)
         {
-            throw new NotImplementedException();
+            var query = Db.Users.Where(e => !e.Deleted);
+            if (!string.IsNullOrWhiteSpace(parameter.SearchKey))
+            {
+                query = query.Where(e => e.Name.Contains(parameter.SearchKey));
+            }
+
+            return await query.OrderByDescending(e => e.ID).SetPage(parameter.Page);
         }
     }
 }
